@@ -10,7 +10,7 @@ brew install daniel-oh/tap/background-remover
 |---|---|
 | [`background-remover`](Formula/background-remover.rb) | [Background removal as a small HTTP service](https://github.com/daniel-oh/background-remover): prebuilt binaries for macOS (Apple silicon) and Linux (x86_64, aarch64), plus a `brew services` definition |
 
-The formulae install release binaries; nothing is compiled. Each release of
+The formulae install release binaries; nothing is compiled. Linux binaries need glibc 2.38 or newer (Ubuntu 24.04, Debian 13, Fedora 39). Each release of
 a project rewrites its formula here from the release's checksums, so the
 version in the tap matches the latest tag.
 

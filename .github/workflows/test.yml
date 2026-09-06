@@ -1,0 +1,34 @@
+name: Test
+
+# Every change to a formula is audited, installed and tested on macOS
+# (Apple silicon) and Linux, so a broken checksum or URL never reaches
+# anyone running brew install.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-14, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: Homebrew/actions/setup-homebrew@master
+      - name: Tap this commit
+        run: |
+          brew tap daniel-oh/tap "https://github.com/${GITHUB_REPOSITORY}"
+          git -C "$(brew --repository daniel-oh/tap)" fetch origin "$GITHUB_SHA"
+          git -C "$(brew --repository daniel-oh/tap)" checkout "$GITHUB_SHA"
+      - name: Audit and style
+        run: |
+          brew style daniel-oh/tap
+          brew audit --strict --online daniel-oh/tap/background-remover
+      - name: Install and test
+        run: |
+          brew install --formula daniel-oh/tap/background-remover
+          brew test daniel-oh/tap/background-remover
+          "$(brew --prefix)/bin/background-remover" --version
